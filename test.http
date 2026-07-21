@@ -1,0 +1,51 @@
+### Crear proveedor
+POST http://localhost:3000/api/v1/proveedores
+Content-Type: application/json
+
+{
+    "nombre": "Distribuidora La 80",
+    "nit": "900123456-7",
+    "correo": "ventas@la80.com",
+    "telefono": 3001234567
+}
+
+### Crear producto con referencia al proveedor
+### Cambia proveedor_id por el id_generado al crear el proveedor
+POST http://localhost:3000/api/v1/productos
+Content-Type: application/json
+
+{
+    "nombre": "Miel de abejas",
+    "precio": 4000,
+    "stock": 25,
+    "categoria": ["Producto animal", "Apicultura"],
+    "proveedor_id": "PEGAR_ID_DEL_PROVEEDOR"
+}
+
+### Consultar productos con datos del proveedor
+GET http://localhost:3000/api/v1/productos
+
+### Consultar un producto con datos del proveedor
+GET http://localhost:3000/api/v1/productos/PEGAR_ID_DEL_PRODUCTO
+
+### Consultar productos de un proveedor
+GET http://localhost:3000/api/v1/proveedores/PEGAR_ID_DEL_PROVEEDOR/productos
+
+### Actualizar el proveedor de un producto
+PUT http://localhost:3000/api/v1/productos/PEGAR_ID_DEL_PRODUCTO
+Content-Type: application/json
+
+{
+    "proveedor_id": "PEGAR_ID_DEL_PROVEEDOR"
+}
+
+### Actualizar estado
+PATCH http://localhost:3000/api/v1/actualizar-estado/PEGAR_ID_DEL_PRODUCTO
+Content-Type: application/json
+
+{
+    "estado_nuevo": "procesado"
+}
+
+### Eliminar producto
+DELETE http://localhost:3000/api/v1/productos/PEGAR_ID_DEL_PRODUCTO

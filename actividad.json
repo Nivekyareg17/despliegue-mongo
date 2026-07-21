@@ -1,0 +1,29 @@
+[
+{
+    "Comentario 1" : "Coleccion - Ventas",
+
+    "_id": "venta_1",
+    "cliente" : " ",
+    "precio-total ": " ",
+    "productos": [],
+    "fecha": " "
+},
+
+{
+     "Comentario 2" : "Coleccion - Productos",
+
+    "_id": "producto_1",
+    "nombre": " ",
+    "categoria": " ",
+    "precio ": " "
+},
+
+{
+     "Comentario 3" : "Coleccion - Factura",
+
+    "_id": "factura_1",
+    "productos": [],
+    "precio-total ": " ", 
+    "fecha": " "
+}
+]
