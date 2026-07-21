@@ -32,6 +32,4 @@ app.use('/api/v1', proveedoresRoutes);// <-- Agregado el registro para que Expre
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-    console.log(`El backend está escuchando en localhost:${PORT}`);
-});
+module.exports = app;
