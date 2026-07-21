@@ -4,7 +4,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const { ObjectId } = require('mongodb'); 
 
-// Endpoint de Salud (Asegúrate de agregarle la barra '/' al inicio)
+// Endpoint de Salud -> URL Final: /api/v1/health
 router.get('/health', (req, res) => {
     res.status(200).json({
         estado: "Servidor funcionando", 
@@ -12,19 +12,35 @@ router.get('/health', (req, res) => {
     });
 });
 
-// GET - Consultar catálogo completo
-router.get('/api/productos', async (req, res) => {
+// GET - Consultar catálogo completo -> URL Final: /api/v1/productos
+router.get('/productos', async (req, res) => {
     try {
+        // Validación de Cold Start en Vercel
+        if (mongoose.connection.readyState !== 1) {
+            console.log("⏳ Vercel despertando: Esperando conexión a MongoDB...");
+            await mongoose.connect(process.env.MONGO_URI);
+        }
+
         const productos = await mongoose.connection.db.collection('productos').find({}).toArray();
         res.json(productos);
     } catch (error) {
-        res.status(500).json({ error: "Error al consultar los productos" });
+        console.error("Error real:", error);
+        res.status(500).json({ 
+            error: "Error al consultar los productos", 
+            detalle: error.message 
+        });
     }
 });
 
-// POST - Crear un nuevo producto
-router.post('/api/productos', async (req, res) => {
+// POST - Crear un nuevo producto -> URL Final: /api/v1/productos
+router.post('/productos', async (req, res) => {
     try {
+        // Validación de Cold Start en Vercel
+        if (mongoose.connection.readyState !== 1) {
+            console.log("⏳ Vercel despertando: Esperando conexión a MongoDB...");
+            await mongoose.connect(process.env.MONGO_URI);
+        }
+
         const nuevoProducto = req.body;
 
         if (!nuevoProducto.nombre || !nuevoProducto.precio) {
@@ -41,14 +57,23 @@ router.post('/api/productos', async (req, res) => {
             datosGuardados: nuevoProducto
         });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Error critico al guardar el producto" });
+        console.error("Error real:", error);
+        res.status(500).json({ 
+            error: "Error critico al guardar el producto",
+            detalle: error.message 
+        });
     }
 });
 
-// PUT - Actualizar un producto por ID usando $set
-router.put('/api/productos/:id', async (req, res) => {
+// PUT - Actualizar un producto por ID usando $set -> URL Final: /api/v1/productos/:id
+router.put('/productos/:id', async (req, res) => {
     try {
+        // Validación de Cold Start en Vercel
+        if (mongoose.connection.readyState !== 1) {
+            console.log("⏳ Vercel despertando: Esperando conexión a MongoDB...");
+            await mongoose.connect(process.env.MONGO_URI);
+        }
+
         const idProducto = req.params.id;
         const datosNuevos = req.body;
 
@@ -66,15 +91,23 @@ router.put('/api/productos/:id', async (req, res) => {
             modificaciones: resultado.modifiedCount
         });
     } catch (error) {
-        console.error(error);
-        // CORREGIDO: De 'resultado.status' a 'res.status'
-        res.status(500).json({ error: "No se pudo actualizar el producto" });
+        console.error("Error real:", error);
+        res.status(500).json({ 
+            error: "No se pudo actualizar el producto",
+            detalle: error.message 
+        });
     }
 });
 
-// DELETE - Eliminar físicamente un producto por ID
-router.delete('/api/productos/:id', async (req, res) => {
+// DELETE - Eliminar físicamente un producto por ID -> URL Final: /api/v1/productos/:id
+router.delete('/productos/:id', async (req, res) => {
     try {
+        // Validación de Cold Start en Vercel
+        if (mongoose.connection.readyState !== 1) {
+            console.log("⏳ Vercel despertando: Esperando conexión a MongoDB...");
+            await mongoose.connect(process.env.MONGO_URI);
+        }
+
         const idProducto = req.params.id;
         const resultado = await mongoose.connection.db.collection('productos').deleteOne({
             _id: new ObjectId(idProducto)
@@ -86,9 +119,11 @@ router.delete('/api/productos/:id', async (req, res) => {
 
         res.json({ mensaje: "Producto eliminado correctamente" });
     } catch (error) {
-        console.error(error);
-        // CORREGIDO: De 'resultado.status' a 'res.status'
-        res.status(500).json({ error: "No se pudo eliminar el producto" });
+        console.error("Error real:", error);
+        res.status(500).json({ 
+            error: "No se pudo eliminar el producto",
+            detalle: error.message 
+        });
     }
 });
 
